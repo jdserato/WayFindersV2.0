@@ -10,6 +10,8 @@ public class Municipality {
     private Municipality leftMun, rightMun;
     private String travelTime, travelDistance;
 
+    public Municipality() {}
+
     public Municipality(String name, int fareOrdinary, int fareAircon, Municipality[] encompassingMunicipality, Municipality leftMun, Municipality rightMun, String travelTime, String travelDistance) {
         this(name, null, fareOrdinary, fareAircon, encompassingMunicipality, leftMun, rightMun, travelTime, travelDistance);
     }

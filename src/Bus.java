@@ -9,28 +9,32 @@ import java.util.Date;
 public class Bus {
     private int id;
     private String busCompany;
-    private String type;
-    private Municipality destination;
+    private String busType;
+    private Municipality finDestination;
     private String departure;
     private String lastTrip;
     private String nextTime;
-    private Date[] times;
+    private Date[] setOfTimes;
+
+    public String bay_num, bus_id, company, fare, destination, first_departure, last_trip, no_of_buses, no_of_trips, times, type, wing_area;
 
     private String wingArea;
     private int trips, buses, bayNumber, fares;
+
+    public Bus() {}
 
     public Bus(int bayNumber, String busCompany, String type, Municipality destination, String departure, String lastTrip, int trips, int buses, int fares, String wingArea, Date[] times, int id) {
         this.busCompany = busCompany;
         this.bayNumber = bayNumber;
         this.fares = fares;
         this.wingArea = wingArea;
-        this.type = type;
-        this.destination = destination;
+        this.busType = type;
+        this.finDestination = destination;
         this.departure = departure;
         this.lastTrip = lastTrip;
         this.trips = trips;
         this.buses = buses;
-        this.times = times;
+        this.setOfTimes = times;
         this.id = id;
     }
 
@@ -38,7 +42,7 @@ public class Bus {
         Calendar cal = Calendar.getInstance();
         double currTime = cal.getTime().getHours() + ((double) cal.getTime().getMinutes() / 100 * 1.67);
         DateFormat df = new SimpleDateFormat("HH:mm");
-        for (Date timeOfBus : getTimes()) {
+        for (Date timeOfBus : getSetOfTimes()) {
             if (timeOfBus == null) {
                 break;
             }
@@ -51,12 +55,12 @@ public class Bus {
                 }
             }
         }
-        return df.format(getTimes()[0]);
+        return df.format(getSetOfTimes()[0]);
     }
 
     public double nearestTime() {
         double currTime = Calendar.getInstance().getTime().getHours() + ((double) Calendar.getInstance().getTime().getMinutes() / 100 * 1.67);
-        for (Date timeOfBus : getTimes()) {
+        for (Date timeOfBus : getSetOfTimes()) {
             if (timeOfBus == null) {
                 break;
             }
@@ -81,12 +85,12 @@ public class Bus {
     }
 
 
-    public Date[] getTimes() {
-        return times;
+    public Date[] getSetOfTimes() {
+        return setOfTimes;
     }
 
-    public void setTimes(Date[] times) {
-        this.times = times;
+    public void setSetOfTimes(Date[] setOfTimes) {
+        this.setOfTimes = setOfTimes;
     }
 
     public int getId() {
@@ -121,20 +125,20 @@ public class Bus {
         this.busCompany = busCompany;
     }
 
-    public String getType() {
-        return type;
+    public String getBusType() {
+        return busType;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setBusType(String busType) {
+        this.busType = busType;
     }
 
-    public Municipality getDestination() {
-        return destination;
+    public Municipality getFinDestination() {
+        return finDestination;
     }
 
-    public void setDestination(Municipality destination) {
-        this.destination = destination;
+    public void setFinDestination(Municipality finDestination) {
+        this.finDestination = finDestination;
     }
 
     public String getDeparture() {

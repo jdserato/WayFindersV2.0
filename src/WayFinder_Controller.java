@@ -1,3 +1,4 @@
+import com.google.firebase.database.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
@@ -13,6 +14,7 @@ import javafx.stage.Screen;
 import javafx.util.Duration;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
 import java.util.Date;
@@ -22,6 +24,8 @@ import java.util.ResourceBundle;
  * Created by Serato, Jay Vince on November 01, 2017.
  */
 public class WayFinder_Controller implements Initializable {
+    private DatabaseReference database;
+
     public Pane pMap, pTapToStart, pHeader;
     public VBox vbMain, vbDetails;
     public HBox hbSubMap, hbTap;
@@ -38,12 +42,148 @@ public class WayFinder_Controller implements Initializable {
     private ObservableList<Bus> qualifier = FXCollections.observableArrayList();
     private ObservableList<Bus> buses = FXCollections.observableArrayList();
     private ObservableList<Municipality> municipalities = FXCollections.observableArrayList();
+    private ObservableList<FAQ> faq = FXCollections.observableArrayList();
+    private ObservableList<Announcement> announcements = FXCollections.observableArrayList();
     Rectangle2D screen = Screen.getPrimary().getVisualBounds();
     Image vbBackground = new Image(new File("src/res/Details_Background.gif").toURI().toString(), screen.getWidth(), screen.getHeight(), false, true);
     Image background = new Image(new File("src/res/Background.png").toURI().toString(), screen.getWidth(), screen.getHeight(), false, true);
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        try {
+            DatabaseHelper.initFirebase();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        database = FirebaseDatabase.getInstance().getReference();
+        ObservableList<TextArea> ann = FXCollections.observableArrayList();
+        DatabaseReference dRef = database.child("announcements");
+        dRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Announcement announcement = dataSnapshot.getValue(Announcement.class);
+                announcements.add(announcement);
+                TextArea ta = new TextArea(announcement.getAnnouncement());
+                ta.setEditable(false);
+                ta.setWrapText(true);
+                ta.setPrefWidth(270);
+                ta.setPrefHeight(Math.ceil(announcement.getAnnouncement().length() / 45) * 30);
+                ta.setFocusTraversable(false);
+                ann.add(ta);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        lvAnnouncements.setItems(ann);
+
+        ObservableList<MenuButton> mbs = FXCollections.observableArrayList();
+        ImageView comfortRoom = new ImageView(new File("src/res/TerminalMap/GIF/Comfort_Room.gif").toURI().toString());
+        comfortRoom.setFitWidth(270);
+        comfortRoom.setFitHeight(270);
+        ImageView diningArea = new ImageView(new File("src/res/TerminalMap/GIF/Dining_Area.jpg").toURI().toString());
+        diningArea.setFitHeight(270);
+        diningArea.setFitWidth(270);
+        ImageView chargingStation = new ImageView(new File("src/res/TerminalMap/GIF/Charging_Station.gif").toURI().toString());
+        chargingStation.setFitHeight(270);
+        chargingStation.setFitWidth(270);
+        dRef = database.child("faq");
+        dRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                faq.clear();
+                FAQ faqs = dataSnapshot.getValue(FAQ.class);
+                faq.add(faqs);
+                ImageView help = new ImageView(new File("src/res/help.png").toURI().toString());
+                help.setFitHeight(10.5);
+                help.setFitWidth(10.5);
+                MenuItem menuItem;
+                if (faqs.getAnswer().contains("Comfort_Room")) {
+                    menuItem = new MenuItem("", comfortRoom);
+                } else if (faqs.getAnswer().contains("Dining_Area")) {
+                    menuItem = new MenuItem("", diningArea);
+                } else if (faqs.getAnswer().contains("Charging_Station")) {
+                    menuItem = new MenuItem("", chargingStation);
+                } else {
+                    menuItem = new MenuItem(faqs.getAnswer());
+                }
+                MenuButton mb = new MenuButton(faqs.getQuestion(), help, menuItem);
+                mb.setFocusTraversable(false);
+                mb.setPrefSize(270, 20);
+                mbs.add(mb);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        lvFAQ.setItems(mbs);
+
+        dRef = database.child("bus_info");
+        dRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Bus bus = dataSnapshot.getValue(Bus.class);
+                System.out.println(bus + "miagi");
+                System.out.println(bus.bay_num);
+                System.out.println(bus.bus_id);
+                System.out.println(bus.no_of_buses);
+                System.out.println(bus.company);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         vbMain.setBackground(new Background(new BackgroundImage(background, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
         vbMain.setPrefHeight(screen.getHeight());
         vbMain.setPrefWidth(screen.getWidth());
@@ -222,7 +362,7 @@ public class WayFinder_Controller implements Initializable {
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
-
+/*
         sql = "SELECT *" +
                 "FROM faq";
         try (Connection conn = this.connect()) {
@@ -291,7 +431,7 @@ public class WayFinder_Controller implements Initializable {
             lvAnnouncements.setItems(ann);
         } catch (SQLException e) {
             System.err.println(e.getMessage());
-        }
+        }*/
     }
 
     @FXML
@@ -579,7 +719,7 @@ public class WayFinder_Controller implements Initializable {
 
         qualifier.clear();
         for (Bus bus : buses) {
-            Municipality destination = bus.getDestination();
+            Municipality destination = bus.getFinDestination();
             if (destination != null && destination.toString().contains(municipality.toString())) {
                 qualifier.add(bus);
             } else if (destination != null && destination.getEncompassingMunicipality()[0] != null) {
