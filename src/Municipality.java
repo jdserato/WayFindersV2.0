@@ -2,23 +2,27 @@
  * Created by Serato, Jay Vince on November 01, 2017.
  */
 public class Municipality {
-    private String name;
-    private Municipality subroute;
+    private String theName;
+    private Municipality subrouteArea;
     private int fareOrdinary;
     private int fareAircon;
     private Municipality[] encompassingMunicipality;
-    private Municipality leftMun, rightMun;
-    private String travelTime, travelDistance;
+    private Municipality leftMun;
+    private Municipality rightMun;
+    private String travelTime;
+    private String travelDistance;
+
+    public String encompassed_mun, fare_aircon, fare_ordinary, left_mun, name, right_mun, subroute, travel_distance, travel_time;
 
     public Municipality() {}
 
-    public Municipality(String name, int fareOrdinary, int fareAircon, Municipality[] encompassingMunicipality, Municipality leftMun, Municipality rightMun, String travelTime, String travelDistance) {
-        this(name, null, fareOrdinary, fareAircon, encompassingMunicipality, leftMun, rightMun, travelTime, travelDistance);
+    public Municipality(String theName, int fareOrdinary, int fareAircon, Municipality[] encompassingMunicipality, Municipality leftMun, Municipality rightMun, String travelTime, String travelDistance) {
+        this(theName, null, fareOrdinary, fareAircon, encompassingMunicipality, leftMun, rightMun, travelTime, travelDistance);
     }
 
-    public Municipality(String name, Municipality subroute, int fareOrdinary, int fareAircon, Municipality[] encompassingMunicipality, Municipality leftMun, Municipality rightMun, String travelTime, String travelDistance) {
-        this.name = name;
-        this.subroute = subroute;
+    public Municipality(String theName, Municipality subroute, int fareOrdinary, int fareAircon, Municipality[] encompassingMunicipality, Municipality leftMun, Municipality rightMun, String travelTime, String travelDistance) {
+        this.theName = theName;
+        this.subrouteArea = subroute;
         this.fareOrdinary = fareOrdinary;
         this.fareAircon = fareAircon;
         this.encompassingMunicipality = encompassingMunicipality;
@@ -28,20 +32,20 @@ public class Municipality {
         this.travelTime = travelTime;
     }
 
-    public Municipality getSubroute() {
-        return subroute;
+    public Municipality getSubrouteArea() {
+        return subrouteArea;
     }
 
-    public void setSubroute(Municipality subroute) {
-        this.subroute = subroute;
+    public void setSubrouteArea(Municipality subrouteArea) {
+        this.subrouteArea = subrouteArea;
     }
 
-    public String getName() {
-        return name;
+    public String getTheName() {
+        return theName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTheName(String theName) {
+        this.theName = theName;
     }
 
     public String getTravelTime() {
@@ -101,10 +105,10 @@ public class Municipality {
     }
 
     public String toString() {
-        if (subroute != null) {
-            return String.valueOf(name + " (via " + subroute + ")");
+        if (subrouteArea != null) {
+            return String.valueOf(theName + " (via " + subrouteArea + ")");
         } else {
-            return name;
+            return theName;
         }
     }
 }

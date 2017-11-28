@@ -1,6 +1,8 @@
 import com.google.firebase.database.*;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -26,14 +28,14 @@ import java.util.ResourceBundle;
 public class WayFinder_Controller implements Initializable {
     private DatabaseReference database;
 
-    public Pane pMap, pTapToStart, pHeader;
+    public Pane pMap, pTapToStart;
     public VBox vbMain, vbDetails;
     public HBox hbSubMap, hbTap;
     public TableView<Bus> tvBusDetails;
     public TableColumn<Bus, String> tcBusCompany, tcBusType, tccLocation, tcWingArea, tcBayNumber, tcDestination, tcLastTrip, tcFirstTrip, tcTime, tcMaxFare;
     public TextField taTravelDistance, taTravelTime, taFareAircon, taFareOrdinary;
     public ImageView ivTuburan, ivAsturias, ivBalamban, ivToledoCity, ivPinamungajan, ivAloguinsan, ivBarili, ivDumanjug, ivRonda, ivAlcantara, ivMoalboal, ivBadian, ivAlegria, ivMalabuyoc, ivGinatilan, ivSamboan, ivOslob, ivBoljoon, ivAlcoy, ivDalaguete, ivArgao, ivSibonga, ivCarcarCity, ivZamboanga, ivBacolod, ivSantander, ivDumaguete;
-    public Label lWelcome, lTuburan, lAsturias, lBalamban, lToledoCity, lPinamungajan, lAloguinsan, lBarili, lDumanjug, lRonda, lAlcantara, lMoalboal, lBadian, lAlegria, lMalabuyoc, lGinatilan, lSamboan, lOslob, lBoljoon, lAlcoy, lDalaguete, lArgao, lSibonga, lCarcarCity, lZamboanga, lBacolod, lSantander, lDumaguete;
+    public Label lTuburan, lAsturias, lBalamban, lToledoCity, lPinamungajan, lAloguinsan, lBarili, lDumanjug, lRonda, lAlcantara, lMoalboal, lBadian, lAlegria, lMalabuyoc, lGinatilan, lSamboan, lOslob, lBoljoon, lAlcoy, lDalaguete, lArgao, lSibonga, lCarcarCity, lZamboanga, lBacolod, lSantander, lDumaguete;
     public ImageView ivBackToMap, ivPrev, ivNext, ivTerminalPath;
     public Label lBackToMap, lDestination, lPrev, lNext;
     public ListView<TextArea> lvAnnouncements;
@@ -45,8 +47,9 @@ public class WayFinder_Controller implements Initializable {
     private ObservableList<FAQ> faq = FXCollections.observableArrayList();
     private ObservableList<Announcement> announcements = FXCollections.observableArrayList();
     Rectangle2D screen = Screen.getPrimary().getVisualBounds();
-    Image vbBackground = new Image(new File("src/res/Details_Background.gif").toURI().toString(), screen.getWidth(), screen.getHeight(), false, true);
-    Image background = new Image(new File("src/res/Background.png").toURI().toString(), screen.getWidth(), screen.getHeight(), false, true);
+    static DatabaseReference dRef;
+    Image vbBackground = new Image(new File("src/res/Details_Background.png").toURI().toString(), screen.getWidth(), screen.getHeight(), false, true);
+    Image background = new Image(new File("src/res/MenuBackground.png").toURI().toString(), screen.getWidth(), screen.getHeight(), false, true);
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -57,7 +60,7 @@ public class WayFinder_Controller implements Initializable {
         }
         database = FirebaseDatabase.getInstance().getReference();
         ObservableList<TextArea> ann = FXCollections.observableArrayList();
-        DatabaseReference dRef = database.child("announcements");
+        dRef = database.child("announcements");
         dRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -152,16 +155,89 @@ public class WayFinder_Controller implements Initializable {
         });
         lvFAQ.setItems(mbs);
 
+        dRef = database.child("municipality_info");
+        dRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Municipality mun = dataSnapshot.getValue(Municipality.class);
+                mun.setFareAircon(Integer.parseInt(mun.fare_aircon));
+                System.out.println(mun.getFareAircon());
+                mun.setFareOrdinary(Integer.parseInt(mun.fare_ordinary));
+                mun.setTravelDistance(mun.travel_distance);
+                mun.setTravelTime(mun.travel_time);
+                mun.setTheName(mun.name);
+                municipalities.add(mun);
+                System.out.println(mun + " added");
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         dRef = database.child("bus_info");
         dRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Bus bus = dataSnapshot.getValue(Bus.class);
-                System.out.println(bus + "miagi");
-                System.out.println(bus.bay_num);
-                System.out.println(bus.bus_id);
-                System.out.println(bus.no_of_buses);
-                System.out.println(bus.company);
+                System.out.println("afirm");
+                bus.setBayNumber(Integer.parseInt(bus.bay_num));
+                bus.setBusCompany(bus.company);
+                bus.setBuses(Integer.parseInt(bus.no_of_buses));
+                bus.setBusType(bus.type);
+                System.out.println(bus.type + " is " + bus.getBusType());
+                bus.setDeparture(bus.first_departure);
+                bus.setLastTrip(bus.last_trip);
+                bus.setFares(Integer.parseInt(bus.fare));
+                java.util.Date[] timeLine = new java.util.Date[50];
+                int j = 0;
+                while (true){
+                    int hr = 0, min = 0;
+                    int offset = 10;
+                    boolean colonDone = false;
+                    try {
+                        while (bus.times.charAt(0) != ';') {
+                            if (bus.times.charAt(0) != ' ' && bus.times.charAt(0) != ':') {
+                                if (!colonDone) {
+                                    hr = hr + (Integer.parseInt(bus.times.charAt(0) + "") * offset);
+                                    offset = 1;
+                                } else {
+                                    min = min + (Integer.parseInt(bus.times.charAt(0) + "") * offset);
+                                    offset = 1;
+                                }
+                            } else if (bus.times.charAt(0) == ':') {
+                                colonDone = true;
+                                offset = 10;
+                            }
+                            bus.times = bus.times.substring(1);
+                        }
+                        bus.times = bus.times.substring(1);
+                        timeLine[j++] = new Date(0, 0, 0, hr, min);
+                    } catch (StringIndexOutOfBoundsException | NullPointerException e) {
+                        break;
+                    }
+                }
+                bus.setSetOfTimes(timeLine);
+                bus.setWingArea(bus.wing_area);
+                bus.setTrips(Integer.parseInt(bus.no_of_trips));
+                bus.setId(Integer.parseInt(bus.bus_id));
+                buses.add(bus);
             }
 
             @Override
@@ -193,25 +269,21 @@ public class WayFinder_Controller implements Initializable {
         vbDetails.setPrefHeight(screen.getHeight());
         hbTap.setPrefHeight(screen.getHeight());
         hbTap.setPrefWidth(screen.getWidth());
-        lWelcome.setVisible(true);
 
         IdleMonitor idleMonitor = new IdleMonitor(Duration.seconds(60), () -> {
             vbDetails.setVisible(false);
             pMap.setVisible(true);
             pMap.setOpacity(0.25);
-            lWelcome.setVisible(true);
             pTapToStart.setVisible(true);
             vbMain.setBackground(new Background(new BackgroundImage(background, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
         }, true);
         idleMonitor.register(vbDetails, Event.ANY);
 
-        updateDatabase();
-
         tcBusCompany.setCellValueFactory(new PropertyValueFactory<>("busCompany"));
-        tcBusType.setCellValueFactory(new PropertyValueFactory<>("type"));
+        tcBusType.setCellValueFactory(new PropertyValueFactory<>("busType"));
         tcWingArea.setCellValueFactory(new PropertyValueFactory<>("wingArea"));
         tcBayNumber.setCellValueFactory(new PropertyValueFactory<>("bayNumber"));
-        tcDestination.setCellValueFactory(new PropertyValueFactory<>("destination"));
+        tcDestination.setCellValueFactory(new PropertyValueFactory<>("finDestination"));
         tcFirstTrip.setCellValueFactory(new PropertyValueFactory<>("departure"));
         tcLastTrip.setCellValueFactory(new PropertyValueFactory<>("lastTrip"));
         tcTime.setCellValueFactory(new PropertyValueFactory<>("nextTime"));
@@ -237,207 +309,16 @@ public class WayFinder_Controller implements Initializable {
         });
     }
 
-    private void updateDatabase() {
-        String sql = "SELECT *" +
-                "FROM municipality_info";
-
-        try (Connection conn = this.connect()) {
-            Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery(sql);
-
-            municipalities.clear();
-            while (rs.next()) {
-                municipalities.add(new Municipality(rs.getString("name"), rs.getInt("fare_ordinary"), rs.getInt("fare_aircon"), null, null, null, rs.getString("travel_time"), rs.getString("travel_distance")));
-            }
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        try (Connection conn = this.connect()) {
-            Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery(sql);
-
-            for (int i = 0; i < municipalities.size(); i++) {
-                rs.next();
-                Municipality leftMun = null, rightMun = null, subroute = null;
-                Municipality[] encompassingMunicipality = new Municipality[15];
-
-                String left = rs.getString("left_mun");
-                String right = rs.getString("right_mun");
-                String subR = rs.getString("subroute");
-                boolean subrouteFound = false;
-                for (Municipality m : municipalities) {
-                    if (m.toString().equalsIgnoreCase(left)) {
-                        leftMun = m;
-                    } else if (m.toString().equalsIgnoreCase(right)) {
-                        rightMun = m;
-                    }
-                    if (!subrouteFound && m.getName().equalsIgnoreCase(subR)) {
-                        subroute = m;
-                        subrouteFound = true;
-                    }
-                }
-                ObservableList<Municipality> encompassed = FXCollections.observableArrayList();
-                String enc = rs.getString("encompassed_mun");
-                String mun = "";
-                for (int j = 0; j < enc.length(); j++) {
-
-                    if (enc.charAt(j) == ',' || j == enc.length() - 1) {
-                        if (j == enc.length() - 1) {
-                            mun = mun.concat(enc.charAt(j) + "");
-                        }
-                        for (Municipality m : municipalities) {
-                            if (mun.equalsIgnoreCase(m.getName())) {
-                                encompassed.add(m);
-                                break;
-                            }
-                        }
-                        mun = "";
-                        j++;
-                    } else {
-                        mun = mun.concat(enc.charAt(j) + "");
-                    }
-                }
-                municipalities.get(i).setLeftMun(leftMun);
-                municipalities.get(i).setRightMun(rightMun);
-                municipalities.get(i).setSubroute(subroute);
-
-                int j = 0;
-                for (Municipality m : encompassed) {
-                    encompassingMunicipality[j++] = m;
-                }
-                municipalities.get(i).setEncompassingMunicipality(encompassingMunicipality);
-            }
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        sql = "SELECT *" +
-                "FROM bus_info";
-
-        try (Connection conn = this.connect()) {
-            Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery(sql);
-            buses.clear();
-            while (rs.next()) {
-                Municipality thisMunicipality = null;
-                for (Municipality m : municipalities) {
-                    if (rs.getString("destination").equalsIgnoreCase(m.toString())) {
-                        thisMunicipality = m;
-                        break;
-                    }
-                }
-                String times = rs.getString("times");
-                java.util.Date[] timeLine = new java.util.Date[50];
-                int j = 0;
-                while (true){
-                    int hr = 0, min = 0;
-                    int offset = 10;
-                    boolean colonDone = false;
-                    try {
-                        while (times.charAt(0) != ',') {
-                            if (times.charAt(0) != ' ' && times.charAt(0) != ':') {
-                                if (!colonDone) {
-                                    hr = hr + (Integer.parseInt(times.charAt(0) + "") * offset);
-                                    offset = 1;
-                                } else {
-                                    min = min + (Integer.parseInt(times.charAt(0) + "") * offset);
-                                    offset = 1;
-                                }
-                            } else if (times.charAt(0) == ':') {
-                                colonDone = true;
-                                offset = 10;
-                            }
-                            times = times.substring(1);
-                        }
-                        times = times.substring(1);
-                        timeLine[j++] = new Date(0, 0, 0, hr, min);
-                    } catch (StringIndexOutOfBoundsException | NullPointerException e) {
-                        break;
-                    }
-                }
-                buses.add(new Bus(rs.getInt("bay_num"), rs.getString("company"), rs.getString("type"), thisMunicipality, rs.getString("first_departure"), rs.getString("last_trip"), rs.getInt("no_of_trips"), rs.getInt("no_of_buses"), rs.getInt("fare"), rs.getString("wing_area"), timeLine, rs.getInt("bus_id")));
-            }
-
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-/*
-        sql = "SELECT *" +
-                "FROM faq";
-        try (Connection conn = this.connect()) {
-            Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery(sql);
-
-            ObservableList<MenuButton> mbs = FXCollections.observableArrayList();
-            ImageView comfortRoom = new ImageView(new File("src/res/TerminalMap/GIF/Comfort_Room.gif").toURI().toString());
-            comfortRoom.setFitWidth(270);
-            comfortRoom.setFitHeight(270);
-            ImageView diningArea = new ImageView(new File("src/res/TerminalMap/GIF/Dining_Area.jpg").toURI().toString());
-            diningArea.setFitHeight(270);
-            diningArea.setFitWidth(270);
-            ImageView chargingStation = new ImageView(new File("src/res/TerminalMap/GIF/Charging_Station.gif").toURI().toString());
-            chargingStation.setFitHeight(270);
-            chargingStation.setFitWidth(270);
-            while (rs.next()) {
-                ImageView help = new ImageView(new File("src/res/help.png").toURI().toString());
-                help.setFitHeight(10.5);
-                help.setFitWidth(10.5);
-                MenuItem menuItem;
-                if (rs.getString("answer").contains("Comfort_Room")) {
-                    menuItem = new MenuItem("", comfortRoom);
-                } else if (rs.getString("answer").contains("Dining_Area")) {
-                    menuItem = new MenuItem("", diningArea);
-                } else if (rs.getString("answer").contains("Charging_Station")) {
-                    menuItem = new MenuItem("", chargingStation);
-                } else {
-                    menuItem = new MenuItem(rs.getString("answer"));
-                }
-                MenuButton mb = new MenuButton(rs.getString("question"), help, menuItem);
-                mb.setFocusTraversable(false);
-                mb.setPrefSize(270, 20);
-                mbs.add(mb);
-            }
-            lvFAQ.setItems(mbs);
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-
-        sql = "SELECT *" +
-                "FROM announcements";
-        try (Connection conn = this.connect()) {
-            Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery(sql);
-
-            ObservableList<TextArea> ann = FXCollections.observableArrayList();
-            while (rs.next()) {
-                TextArea ta = new TextArea(rs.getString("announcement"));
-                ta.setEditable(false);
-                ta.setWrapText(true);
-                ta.setPrefWidth(270);
-                ta.setPrefHeight(Math.ceil(rs.getString("announcement").length() / 45) * 30);
-                ta.setFocusTraversable(false);
-                ann.add(ta);
-            }
-            if (ann.size() == 0) {
-                TextArea ta = new TextArea("No announcements for today.");
-                ta.setEditable(false);
-                ta.setWrapText(true);
-                ta.setPrefWidth(270);
-                ta.setPrefHeight(30);
-                ta.setFocusTraversable(false);
-                ann.add(ta);
-            }
-            lvAnnouncements.setItems(ann);
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }*/
+    @FXML
+    public static void exitApplication(ActionEvent event) {
+        Platform.exit();
     }
 
     @FXML
     public void handleBacolodSelected() {
+        System.out.println("bacolod selected");
         for (Municipality m : municipalities) {
-            if (m.getName().equalsIgnoreCase("Bacolod")) {
+            if (m.getTheName().equalsIgnoreCase("Bacolod")) {
                 handleMunicipalitySelected(m);
                 break;
             }
@@ -447,7 +328,7 @@ public class WayFinder_Controller implements Initializable {
     @FXML
     public void handleTuburanSelected() {
         for (Municipality m : municipalities) {
-            if (m.getName().equalsIgnoreCase("Tuburan")) {
+            if (m.getTheName().equalsIgnoreCase("Tuburan")) {
                 handleMunicipalitySelected(m);
                 break;
             }
@@ -457,7 +338,7 @@ public class WayFinder_Controller implements Initializable {
     @FXML
     public void handleAsturiasSelected() {
         for (Municipality m : municipalities) {
-            if (m.getName().equalsIgnoreCase("Asturias")) {
+            if (m.getTheName().equalsIgnoreCase("Asturias")) {
                 handleMunicipalitySelected(m);
                 break;
             }
@@ -467,7 +348,7 @@ public class WayFinder_Controller implements Initializable {
     @FXML
     public void handleBalambanSelected() {
         for (Municipality m : municipalities) {
-            if (m.getName().equalsIgnoreCase("Balamban")) {
+            if (m.getTheName().equalsIgnoreCase("Balamban")) {
                 handleMunicipalitySelected(m);
                 break;
             }
@@ -477,7 +358,7 @@ public class WayFinder_Controller implements Initializable {
     @FXML
     public void handleToledoCitySelected() {
         for (Municipality m : municipalities) {
-            if (m.getName().equalsIgnoreCase("Toledo City")) {
+            if (m.getTheName().equalsIgnoreCase("Toledo City")) {
                 handleMunicipalitySelected(m);
                 break;
             }
@@ -487,7 +368,7 @@ public class WayFinder_Controller implements Initializable {
     @FXML
     public void handlePinamungajanSelected() {
         for (Municipality m : municipalities) {
-            if (m.getName().equalsIgnoreCase("Pinamungajan")) {
+            if (m.getTheName().equalsIgnoreCase("Pinamungajan")) {
                 handleMunicipalitySelected(m);
                 break;
             }
@@ -497,7 +378,7 @@ public class WayFinder_Controller implements Initializable {
     @FXML
     public void handleAloguinsanSelected() {
         for (Municipality m : municipalities) {
-            if (m.getName().equalsIgnoreCase("Aloguinsan")) {
+            if (m.getTheName().equalsIgnoreCase("Aloguinsan")) {
                 handleMunicipalitySelected(m);
                 break;
             }
@@ -507,7 +388,7 @@ public class WayFinder_Controller implements Initializable {
     @FXML
     public void handleBariliSelected() {
         for (Municipality m : municipalities) {
-            if (m.getName().equalsIgnoreCase("Barili")) {
+            if (m.getTheName().equalsIgnoreCase("Barili")) {
                 handleMunicipalitySelected(m);
 
                 break;
@@ -518,7 +399,7 @@ public class WayFinder_Controller implements Initializable {
     @FXML
     public void handleDumanjugSelected() {
         for (Municipality m : municipalities) {
-            if (m.getName().equalsIgnoreCase("Dumanjug")) {
+            if (m.getTheName().equalsIgnoreCase("Dumanjug")) {
                 handleMunicipalitySelected(m);
                 break;
             }
@@ -528,7 +409,7 @@ public class WayFinder_Controller implements Initializable {
     @FXML
     public void handleRondaSelected() {
         for (Municipality m : municipalities) {
-            if (m.getName().equalsIgnoreCase("Ronda")) {
+            if (m.getTheName().equalsIgnoreCase("Ronda")) {
                 handleMunicipalitySelected(m);
                 break;
             }
@@ -538,7 +419,7 @@ public class WayFinder_Controller implements Initializable {
     @FXML
     public void handleAlcantaraSelected() {
         for (Municipality m : municipalities) {
-            if (m.getName().equalsIgnoreCase("Alcantara")) {
+            if (m.getTheName().equalsIgnoreCase("Alcantara")) {
                 handleMunicipalitySelected(m);
                 break;
             }
@@ -548,7 +429,7 @@ public class WayFinder_Controller implements Initializable {
     @FXML
     public void handleMoalboalSelected() {
         for (Municipality m : municipalities) {
-            if (m.getName().equalsIgnoreCase("Moalboal")) {
+            if (m.getTheName().equalsIgnoreCase("Moalboal")) {
                 handleMunicipalitySelected(m);
                 break;
             }
@@ -558,7 +439,7 @@ public class WayFinder_Controller implements Initializable {
     @FXML
     public void handleBadianSelected() {
         for (Municipality m : municipalities) {
-            if (m.getName().equalsIgnoreCase("Badian")) {
+            if (m.getTheName().equalsIgnoreCase("Badian")) {
                 handleMunicipalitySelected(m);
                 break;
             }
@@ -568,7 +449,7 @@ public class WayFinder_Controller implements Initializable {
     @FXML
     public void handleAlegriaSelected() {
         for (Municipality m : municipalities) {
-            if (m.getName().equalsIgnoreCase("Alegria")) {
+            if (m.getTheName().equalsIgnoreCase("Alegria")) {
                 handleMunicipalitySelected(m);
                 break;
             }
@@ -578,7 +459,7 @@ public class WayFinder_Controller implements Initializable {
     @FXML
     public void handleMalabuyocSelected() {
         for (Municipality m : municipalities) {
-            if (m.getName().equalsIgnoreCase("Malabuyoc")) {
+            if (m.getTheName().equalsIgnoreCase("Malabuyoc")) {
                 handleMunicipalitySelected(m);
                 break;
             }
@@ -588,7 +469,7 @@ public class WayFinder_Controller implements Initializable {
     @FXML
     public void handleGinatilanSelected() {
         for (Municipality m : municipalities) {
-            if (m.getName().equalsIgnoreCase("Ginatilan")) {
+            if (m.getTheName().equalsIgnoreCase("Ginatilan")) {
                 handleMunicipalitySelected(m);
                 break;
             }
@@ -598,7 +479,7 @@ public class WayFinder_Controller implements Initializable {
     @FXML
     public void handleSamboanSelected() {
         for (Municipality m : municipalities) {
-            if (m.getName().equalsIgnoreCase("Samboan")) {
+            if (m.getTheName().equalsIgnoreCase("Samboan")) {
                 handleMunicipalitySelected(m);
                 break;
             }
@@ -608,7 +489,7 @@ public class WayFinder_Controller implements Initializable {
     @FXML
     public void handleSantanderSelected() {
         for (Municipality m : municipalities) {
-            if (m.getName().equalsIgnoreCase("Santander")) {
+            if (m.getTheName().equalsIgnoreCase("Santander")) {
                 handleMunicipalitySelected(m);
                 break;
             }
@@ -618,7 +499,7 @@ public class WayFinder_Controller implements Initializable {
     @FXML
     public void handleOslobSelected() {
         for (Municipality m : municipalities) {
-            if (m.getName().equalsIgnoreCase("Oslob")) {
+            if (m.getTheName().equalsIgnoreCase("Oslob")) {
                 handleMunicipalitySelected(m);
                 break;
             }
@@ -628,7 +509,7 @@ public class WayFinder_Controller implements Initializable {
     @FXML
     public void handleBoljoonSelected() {
         for (Municipality m : municipalities) {
-            if (m.getName().equalsIgnoreCase("Boljoon")) {
+            if (m.getTheName().equalsIgnoreCase("Boljoon")) {
                 handleMunicipalitySelected(m);
                 break;
             }
@@ -638,7 +519,7 @@ public class WayFinder_Controller implements Initializable {
     @FXML
     public void handleAlcoySelected() {
         for (Municipality m : municipalities) {
-            if (m.getName().equalsIgnoreCase("Alcoy")) {
+            if (m.getTheName().equalsIgnoreCase("Alcoy")) {
                 handleMunicipalitySelected(m);
                 break;
             }
@@ -648,7 +529,7 @@ public class WayFinder_Controller implements Initializable {
     @FXML
     public void handleDalagueteSelected() {
         for (Municipality m : municipalities) {
-            if (m.getName().equalsIgnoreCase("Dalaguete")) {
+            if (m.getTheName().equalsIgnoreCase("Dalaguete")) {
                 handleMunicipalitySelected(m);
                 break;
             }
@@ -658,7 +539,7 @@ public class WayFinder_Controller implements Initializable {
     @FXML
     public void handleArgaoSelected() {
         for (Municipality m : municipalities) {
-            if (m.getName().equalsIgnoreCase("Argao")) {
+            if (m.getTheName().equalsIgnoreCase("Argao")) {
                 handleMunicipalitySelected(m);
                 break;
             }
@@ -668,7 +549,7 @@ public class WayFinder_Controller implements Initializable {
     @FXML
     public void handleSibongaSelected() {
         for (Municipality m : municipalities) {
-            if (m.getName().equalsIgnoreCase("Sibonga")) {
+            if (m.getTheName().equalsIgnoreCase("Sibonga")) {
                 handleMunicipalitySelected(m);
                 break;
             }
@@ -678,7 +559,7 @@ public class WayFinder_Controller implements Initializable {
     @FXML
     public void handleCarcarCitySelected() {
         for (Municipality m : municipalities) {
-            if (m.getName().equalsIgnoreCase("Carcar City")) {
+            if (m.getTheName().equalsIgnoreCase("Carcar City")) {
                 handleMunicipalitySelected(m);
                 break;
             }
@@ -688,7 +569,7 @@ public class WayFinder_Controller implements Initializable {
     @FXML
     public void handleDumagueteSelected() {
         for (Municipality m : municipalities) {
-            if (m.getName().equalsIgnoreCase("Dumaguete")) {
+            if (m.getTheName().equalsIgnoreCase("Dumaguete")) {
                 handleMunicipalitySelected(m);
                 break;
             }
@@ -698,7 +579,7 @@ public class WayFinder_Controller implements Initializable {
     @FXML
     public void handleZamboangaSelected() {
         for (Municipality m : municipalities) {
-            if (m.getName().equalsIgnoreCase("Zamboanga")) {
+            if (m.getTheName().equalsIgnoreCase("Zamboanga")) {
                 handleMunicipalitySelected(m);
                 break;
             }
@@ -706,7 +587,6 @@ public class WayFinder_Controller implements Initializable {
     }
 
     private void handleMunicipalitySelected(Municipality municipality) {
-        lWelcome.setVisible(false);
         vbMain.setBackground(new Background(new BackgroundImage(vbBackground, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
         pMap.setVisible(false);
         vbDetails.setVisible(true);
@@ -714,12 +594,14 @@ public class WayFinder_Controller implements Initializable {
         vbDetails.setLayoutY(0);
 
         lDestination.setText(municipality.toString());
-        lPrev.setText(municipality.getLeftMun().getName());
-        lNext.setText(municipality.getRightMun().getName());
+        lPrev.setText(municipality.getLeftMun().getTheName());
+        lNext.setText(municipality.getRightMun().getTheName());
 
         qualifier.clear();
         for (Bus bus : buses) {
+            System.out.println("Municipality is: " + municipality);
             Municipality destination = bus.getFinDestination();
+            System.out.println("as to compare to " + destination);
             if (destination != null && destination.toString().contains(municipality.toString())) {
                 qualifier.add(bus);
             } else if (destination != null && destination.getEncompassingMunicipality()[0] != null) {
@@ -729,6 +611,9 @@ public class WayFinder_Controller implements Initializable {
                     }
                 }
             }
+        }
+        for (Bus m : qualifier){
+            System.out.println(m + " qualified.");
         }
         qualifier = bubbleSort(qualifier);
         tvBusDetails.setItems(qualifier);
@@ -767,9 +652,7 @@ public class WayFinder_Controller implements Initializable {
         vbDetails.setVisible(false);
         pMap.setVisible(true);
         pMap.setOpacity(1.0);
-        lWelcome.setVisible(true);
         vbMain.setBackground(new Background(new BackgroundImage(background, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
-        updateDatabase();
     }
 
     @FXML
@@ -794,6 +677,66 @@ public class WayFinder_Controller implements Initializable {
     private void handleStartClicked() {
         pTapToStart.setVisible(false);
         pMap.setOpacity(1.0);
+        for (Municipality m : municipalities) {
+            Municipality leftMun = null, rightMun = null, subroute = null;
+            Municipality[] encompassingMunicipality = new Municipality[15];
+
+            String left = m.left_mun;
+            String right = m.right_mun;
+            String subR = m.subroute;
+            boolean subrouteFound = false;
+            for (Municipality n : municipalities) {
+                if (n.toString().equalsIgnoreCase(left)) {
+                    leftMun = n;
+                } else if (n.toString().equalsIgnoreCase(right)) {
+                    rightMun = n;
+                }
+                if (!subrouteFound && n.getTheName().equalsIgnoreCase(subR)) {
+                    subroute = n;
+                    subrouteFound = true;
+                }
+            }
+            ObservableList<Municipality> encompassed = FXCollections.observableArrayList();
+            String enc = m.encompassed_mun;
+            String mun = "";
+            for (int j = 0; j < enc.length(); j++) {
+
+                if (enc.charAt(j) == ';' || j == enc.length() - 1) {
+                    if (j == enc.length() - 1) {
+                        mun = mun.concat(enc.charAt(j) + "");
+                    }
+                    for (Municipality n : municipalities) {
+                        if (mun.equalsIgnoreCase(n.getTheName())) {
+                            encompassed.add(n);
+                            break;
+                        }
+                    }
+                    mun = "";
+                    j++;
+                } else {
+                    mun = mun.concat(enc.charAt(j) + "");
+                }
+            }
+            m.setLeftMun(leftMun);
+            m.setRightMun(rightMun);
+            m.setSubrouteArea(subroute);
+
+            int j = 0;
+            for (Municipality n : encompassed) {
+                encompassingMunicipality[j++] = n;
+            }
+            m.setEncompassingMunicipality(encompassingMunicipality);
+        }
+
+        for (Bus bus : buses) {
+            for (Municipality m : municipalities) {
+                if (bus.destination.equalsIgnoreCase(m.toString())) {
+                    bus.setFinDestination(m);
+                    System.out.println(m + " is dest");
+                    break;
+                }
+            }
+        }
     }
 
     private Connection connect() {

@@ -22,8 +22,6 @@ public class Main extends Application {
         primaryStage.setFullScreen(true);
         primaryStage.setAlwaysOnTop(true);
         primaryStage.show();
-
-        //DatabaseHelper.initFirebase();
     }
 
     public static void main(String[] args) {
