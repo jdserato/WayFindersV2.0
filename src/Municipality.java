@@ -12,7 +12,7 @@ public class Municipality {
     private String travelTime;
     private String travelDistance;
 
-    public String encompassed_mun, fare_aircon, fare_ordinary, left_mun, name, right_mun, subroute, travel_distance, travel_time;
+    public String id, encompassed_mun, fare_aircon, fare_ordinary, left_mun, name, right_mun, subroute, travel_distance, travel_time;
 
     public Municipality() {}
 
@@ -54,6 +54,14 @@ public class Municipality {
 
     public void setTravelTime(String travelTime) {
         this.travelTime = travelTime;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getTravelDistance() {

@@ -1,8 +1,3 @@
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-
 /**
  * Created by Serato, Jay Vince on October 12, 2017.
  */
@@ -14,7 +9,6 @@ public class Bus {
     private String departure;
     private String lastTrip;
     private String nextTime;
-    private Date[] setOfTimes;
 
     public String bay_num, bus_id, company, fare, destination, first_departure, last_trip, no_of_buses, no_of_trips, times, type, wing_area;
 
@@ -23,7 +17,7 @@ public class Bus {
 
     public Bus() {}
 
-    public Bus(int bayNumber, String busCompany, String type, Municipality destination, String departure, String lastTrip, int trips, int buses, int fares, String wingArea, Date[] times, int id) {
+    public Bus(int bayNumber, String busCompany, String type, Municipality destination, String departure, String lastTrip, int trips, int buses, int fares, String wingArea, int id) {
         this.busCompany = busCompany;
         this.bayNumber = bayNumber;
         this.fares = fares;
@@ -34,42 +28,21 @@ public class Bus {
         this.lastTrip = lastTrip;
         this.trips = trips;
         this.buses = buses;
-        this.setOfTimes = times;
         this.id = id;
     }
 
-    public String getNextTime() {
-        Calendar cal = Calendar.getInstance();
-        double currTime = cal.getTime().getHours() + ((double) cal.getTime().getMinutes() / 100 * 1.67);
-        DateFormat df = new SimpleDateFormat("HH:mm");
-        for (Date timeOfBus : getSetOfTimes()) {
-            if (timeOfBus == null) {
-                break;
-            }
-            double timeBay = timeOfBus.getHours() + ((double) timeOfBus.getMinutes() / 100 * 1.67);
-            if (currTime - 0.5 <= timeBay) {
-                if (currTime >= timeBay) {
-                    return "Arrived";
-                } else {
-                    return df.format(timeOfBus);
-                }
-            }
-        }
-        return df.format(getSetOfTimes()[0]);
-    }
-
-    public double nearestTime() {
-        double currTime = Calendar.getInstance().getTime().getHours() + ((double) Calendar.getInstance().getTime().getMinutes() / 100 * 1.67);
-        for (Date timeOfBus : getSetOfTimes()) {
-            if (timeOfBus == null) {
-                break;
-            }
-            double timeBay = timeOfBus.getHours() + ((double) timeOfBus.getMinutes() / 100 * 1.67);
-            if (currTime <= timeBay) {
-                return timeBay;
-            }
-        }
-        return 0.0;
+    public Bus(String bay_num, String company, String type, String destination, String first_departure, String last_trip, String no_of_trips, String no_of_buses, String fare, String wing_area, String bus_id) {
+        this.company = company;
+        this.bay_num = bay_num;
+        this.fare = fare;
+        this.wing_area = wing_area;
+        this.type = type;
+        this.destination = destination;
+        this.first_departure = first_departure;
+        this.last_trip = last_trip;
+        this.no_of_trips = no_of_trips;
+        this.no_of_buses = no_of_buses;
+        this.bus_id = bus_id;
     }
 
     public void setNextTime(String nextTime) {
@@ -82,15 +55,6 @@ public class Bus {
 
     public void setWingArea(String wingArea) {
         this.wingArea = wingArea;
-    }
-
-
-    public Date[] getSetOfTimes() {
-        return setOfTimes;
-    }
-
-    public void setSetOfTimes(Date[] setOfTimes) {
-        this.setOfTimes = setOfTimes;
     }
 
     public int getId() {
