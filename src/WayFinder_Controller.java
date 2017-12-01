@@ -75,12 +75,40 @@ public class WayFinder_Controller implements Initializable {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
+                Announcement a = dataSnapshot.getValue(Announcement.class);
+                for (Announcement an : announcements) {
+                    if (a.id.equalsIgnoreCase(an.id)) {
+                        System.out.println("Management has changed announcement!");
+                        announcements.remove(an);
+                        break;
+                    }
+                }
+                announcements.add(a);
+                TextArea ta = new TextArea(a.getAnnouncement());
+                ta.setEditable(false);
+                ta.setWrapText(true);
+                ta.setPrefWidth(270);
+                ta.setPrefHeight(Math.ceil(a.getAnnouncement().length() / 45) * 30);
+                ta.setFocusTraversable(false);
+                ann.add(ta);
+                lvAnnouncements.setItems(ann);
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
+                Announcement a = dataSnapshot.getValue(Announcement.class);
+                for (Announcement an : announcements) {
+                    if (an.id.equalsIgnoreCase(a.id)) {
+                        announcements.remove(an);
+                    }
+                }
+                for (TextArea ta : ann) {
+                    if (ta.getText().equalsIgnoreCase(a.getAnnouncement())) {
+                        ann.remove(ta);
+                        lvAnnouncements.setItems(ann);
+                        break;
+                    }
+                }
             }
 
             @Override
@@ -109,7 +137,6 @@ public class WayFinder_Controller implements Initializable {
         dRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                //faq.clear();
                 FAQ faqs = dataSnapshot.getValue(FAQ.class);
                 faq.add(faqs);
                 ImageView help = new ImageView(new File("src/res/help.png").toURI().toString());
@@ -133,12 +160,50 @@ public class WayFinder_Controller implements Initializable {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
+                FAQ a = dataSnapshot.getValue(FAQ.class);
+                for (FAQ an : faq) {
+                    if (a.id.equalsIgnoreCase(an.id)) {
+                        System.out.println("Management has changed FAQs!");
+                        faq.remove(an);
+                        break;
+                    }
+                }
+                for (MenuButton mb : mbs) {
+                    if (mb.getText().equalsIgnoreCase(a.getQuestion())) {
+                        mbs.remove(mb);
+                        break;
+                    }
+                }
+                faq.add(a);
+                ImageView help = new ImageView(new File("src/res/help.png").toURI().toString());
+                help.setFitHeight(10.5);
+                help.setFitWidth(10.5);
+                MenuItem menuItem = new MenuItem(a.getAnswer());
+                MenuButton mb = new MenuButton(a.getQuestion(), help, menuItem);
+                mb.setFocusTraversable(false);
+                mb.setPrefSize(270, 20);
+                mbs.add(mb);
+                lvFAQ.setItems(mbs);
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
+                System.out.println("Delete has been noted.");
+                FAQ a = dataSnapshot.getValue(FAQ.class);
+                for (FAQ an : faq) {
+                    if (an.id.equalsIgnoreCase(a.id)) {
+                        faq.remove(an);
+                        break;
+                    }
+                }
+                for (MenuButton mb : mbs) {
+                    System.out.println(mb.getText() + " inspected.");
+                    if (mb.getText().equalsIgnoreCase(a.getQuestion())) {
+                        mbs.remove(mb);
+                        break;
+                    }
+                }
+                lvFAQ.setItems(mbs);
             }
 
             @Override
@@ -157,15 +222,16 @@ public class WayFinder_Controller implements Initializable {
         dRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                System.out.println("Municipality addition found.");
                 Municipality mun = dataSnapshot.getValue(Municipality.class);
-                mun.setFareAircon(Integer.parseInt(mun.fare_aircon));
-                mun.setFareOrdinary(Integer.parseInt(mun.fare_ordinary));
+                mun.setFareAircon((int) Math.ceil(Double.parseDouble(mun.fare_aircon)));
+                mun.setFareOrdinary((int) Math.ceil(Double.parseDouble(mun.fare_ordinary)));
                 mun.setTravelDistance(mun.travel_distance);
                 mun.setTravelTime(mun.travel_time);
                 mun.setTheName(mun.name);
                 municipalities.add(mun);
 
-                for (Municipality m : municipalities) {
+                /*for (Municipality m : municipalities) {
                     Municipality leftMun = null, rightMun = null, subroute = null;
                     Municipality[] encompassingMunicipality = new Municipality[15];
 
@@ -205,12 +271,22 @@ public class WayFinder_Controller implements Initializable {
                             break;
                         }
                     }
-                }
+                }*/
+                System.out.println(mun.getTheName() + " success");
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
+                System.out.println("Municipality data change detected in System.");
+                Municipality mun = dataSnapshot.getValue(Municipality.class);
+                for (Municipality m : municipalities) {
+                    if (m.id.equalsIgnoreCase(mun.id)) {
+                        m.setFareOrdinary(Integer.parseInt(mun.fare_ordinary));
+                        m.setFareAircon(Integer.parseInt(mun.fare_aircon));
+                        System.out.println("Municipality data change applied in System.");
+                        break;
+                    }
+                }
             }
 
             @Override
@@ -245,6 +321,7 @@ public class WayFinder_Controller implements Initializable {
                 bus.setWingArea(bus.wing_area);
                 bus.setTrips(Integer.parseInt(bus.no_of_trips));
                 bus.setId(Integer.parseInt(bus.bus_id));
+
                 for (Bus b : buses) {
                     if (bus.bus_id.equalsIgnoreCase(b.bus_id)) {
                         buses.remove(b);
@@ -282,7 +359,14 @@ public class WayFinder_Controller implements Initializable {
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
+                Bus bus = dataSnapshot.getValue(Bus.class);
+                for (Bus b : buses) {
+                    if (b.bus_id.equalsIgnoreCase(bus.bus_id)) {
+                        System.out.println(b.getBusCompany() + " has been removed from main display control.");
+                        buses.remove(b);
+                        break;
+                    }
+                }
             }
 
             @Override
@@ -321,7 +405,7 @@ public class WayFinder_Controller implements Initializable {
         tcDestination.setCellValueFactory(new PropertyValueFactory<>("finDestination"));
         tcFirstTrip.setCellValueFactory(new PropertyValueFactory<>("departure"));
         tcLastTrip.setCellValueFactory(new PropertyValueFactory<>("lastTrip"));
-        tcTime.setCellValueFactory(new PropertyValueFactory<>("nextTime"));
+        tcTime.setCellValueFactory(new PropertyValueFactory<>("arrived"));
         tcMaxFare.setCellValueFactory(new PropertyValueFactory<>("fares"));
 
         tvBusDetails.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -622,6 +706,7 @@ public class WayFinder_Controller implements Initializable {
     }
 
     private void handleMunicipalitySelected(Municipality municipality) {
+        System.out.println("lets go");
         //FULL INITIALIZER
         for (Municipality m : municipalities) {
             Municipality leftMun = null, rightMun = null, subroute = null;
@@ -671,6 +756,7 @@ public class WayFinder_Controller implements Initializable {
             }
             m.setEncompassingMunicipality(encompassingMunicipality);
         }
+        System.out.println("first part Ok");
 
         for (Bus bus : buses) {
             for (Municipality m : municipalities) {
@@ -682,6 +768,7 @@ public class WayFinder_Controller implements Initializable {
         }
         //END OF FULL INITIALIZER
 
+        System.out.println("last part ok");
         vbMain.setBackground(vbBackground);
         pMap.setVisible(false);
         vbDetails.setVisible(true);
@@ -713,7 +800,7 @@ public class WayFinder_Controller implements Initializable {
                 }
             }
         }
-        //qualifier = bubbleSort(qualifier);
+        qualifier = bubbleSort(qualifier);
         tvBusDetails.setItems(qualifier);
         tvBusDetails.setFocusTraversable(true);
 
@@ -775,7 +862,7 @@ public class WayFinder_Controller implements Initializable {
     private void handleStartClicked() {
         pTapToStart.setVisible(false);
         pMap.setOpacity(1.0);
-    }/*
+    }
 
     private ObservableList<Bus> bubbleSort(ObservableList<Bus> buses) {
         int n = buses.size();
@@ -784,18 +871,18 @@ public class WayFinder_Controller implements Initializable {
         for (int i = 0; i < buses.size(); i++) {
             arr[i] = buses.get(i);
         }
-        *//*for (int i = 0; i < n; i++) {
+        for (int i = 0; i < n; i++) {
             for (int j = 1; j < (n - i); j++) {
                 double left, right;
-                if (arr[j - 1].getNextTime().equalsIgnoreCase("Arrived")) {
+                if (arr[j - 1].arrived.equalsIgnoreCase("Yes")) {
                     left = 0;
                 } else {
-                    left = arr[j-1].nearestTime();
+                    left = 1;
                 }
-                if (arr[j].getNextTime().equalsIgnoreCase("Arrived")) {
+                if (arr[j].arrived.equalsIgnoreCase("Yes")) {
                     right = 0;
                 } else {
-                    right = arr[j].nearestTime();
+                    right = 1;
                 }
                 if (left > right) {
                     //swap elements
@@ -804,7 +891,7 @@ public class WayFinder_Controller implements Initializable {
                     arr[j] = temp;
                 }
             }
-        }*//*
+        }
         buses.clear();
         for (Bus b : arr) {
             if (b != null) {
@@ -812,5 +899,5 @@ public class WayFinder_Controller implements Initializable {
             }
         }
         return buses;
-    }*/
+    }
 }

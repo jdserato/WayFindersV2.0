@@ -8,9 +8,8 @@ public class Bus {
     private Municipality finDestination;
     private String departure;
     private String lastTrip;
-    private String nextTime;
 
-    public String bay_num, bus_id, company, fare, destination, first_departure, last_trip, no_of_buses, no_of_trips, times, type, wing_area;
+    public String bay_num, bus_id, company, fare, destination, first_departure, last_trip, no_of_buses, no_of_trips, type, wing_area, arrived;
 
     private String wingArea;
     private int trips, buses, bayNumber, fares;
@@ -31,11 +30,12 @@ public class Bus {
         this.id = id;
     }
 
-    public Bus(String bay_num, String company, String type, String destination, String first_departure, String last_trip, String no_of_trips, String no_of_buses, String fare, String wing_area, String bus_id) {
+    public Bus(String bay_num, String company, String type, String destination, String first_departure, String last_trip, String no_of_trips, String no_of_buses, String fare, String wing_area, String bus_id, String arrived) {
         this.company = company;
         this.bay_num = bay_num;
         this.fare = fare;
         this.wing_area = wing_area;
+        this.arrived = arrived;
         this.type = type;
         this.destination = destination;
         this.first_departure = first_departure;
@@ -45,8 +45,8 @@ public class Bus {
         this.bus_id = bus_id;
     }
 
-    public void setNextTime(String nextTime) {
-        this.nextTime = nextTime;
+    public String getArrived() {
+        return arrived;
     }
 
     public String getWingArea() {

@@ -1,35 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.paint.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.scene.image.*?>
 <?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<VBox fx:id="vbMain" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="740.0" prefWidth="1340.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="WayFinder_Controller">
+<VBox fx:id="vbMain" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="WayFinder_Controller">
    <children>
-      <Pane fx:id="pMap" opacity="0.25" prefHeight="0.0" prefWidth="1340.0">
+      <Pane fx:id="pMap" opacity="0.25" prefHeight="0.0" prefWidth="1024.0">
          <children>
-            <HBox fx:id="hbSubMap" alignment="CENTER" prefHeight="635.0" prefWidth="1157.0">
+            <HBox fx:id="hbSubMap" alignment="CENTER" prefHeight="635.0" prefWidth="1024.0">
                <children>
-                  <VBox alignment="TOP_CENTER" layoutX="23.0" layoutY="-11.0">
+                  <VBox alignment="TOP_CENTER" layoutX="10.0" layoutY="-11.0">
                      <children>
                         <Label layoutX="75.0" layoutY="-11.0" prefHeight="62.0" prefWidth="185.0" text="Frequently Asked&#10;Questions" textAlignment="CENTER">
                            <font>
                               <Font name="Microsoft Tai Le Bold" size="22.0" />
                            </font>
                         </Label>
-                        <ListView fx:id="lvFAQ" focusTraversable="false" layoutX="23.0" layoutY="50.0" prefHeight="552.0" prefWidth="288.0" />
+                        <ListView fx:id="lvFAQ" focusTraversable="false" layoutX="23.0" layoutY="50.0" prefHeight="552.0" prefWidth="270.0" />
                      </children>
                   </VBox>
-                  <Region prefHeight="635.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
+                  <Region maxWidth="-Infinity" prefHeight="635.0" prefWidth="10.0" HBox.hgrow="ALWAYS" />
                   <Pane layoutX="482.0" layoutY="11.0">
                      <children>
-                        <ImageView fitHeight="635.0" fitWidth="393.0" opacity="0.7" pickOnBounds="true">
+                        <ImageView fitHeight="635.0" fitWidth="380.0" opacity="0.7" pickOnBounds="true">
                            <image>
                               <Image url="@res/white.png" />
                            </image>
@@ -316,7 +326,7 @@
                         </Label>
                      </children>
                   </Pane>
-                  <Region prefHeight="635.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
+                  <Region maxWidth="-Infinity" prefHeight="635.0" prefWidth="10.0" HBox.hgrow="ALWAYS" />
                   <VBox alignment="TOP_CENTER" layoutX="1033.0" layoutY="18.0">
                      <children>
                         <Label prefHeight="62.0" prefWidth="206.0" text=" &#10;ANNOUNCEMENTS" textAlignment="CENTER">
@@ -324,7 +334,7 @@
                               <Font name="Microsoft Tai Le Bold" size="22.0" />
                            </font>
                         </Label>
-                        <ListView fx:id="lvAnnouncements" focusTraversable="false" layoutX="1033.0" layoutY="46.0" prefHeight="552.0" prefWidth="288.0" />
+                        <ListView fx:id="lvAnnouncements" focusTraversable="false" layoutX="1033.0" layoutY="46.0" prefHeight="552.0" prefWidth="270.0" />
                      </children>
                   </VBox>
                </children>
@@ -334,9 +344,9 @@
             </HBox>
          </children>
       </Pane>
-      <Pane fx:id="pTapToStart" onMouseClicked="#handleStartClicked" prefHeight="0.0" prefWidth="1340.0">
+      <Pane fx:id="pTapToStart" onMouseClicked="#handleStartClicked" prefHeight="0.0" prefWidth="1024.0">
          <children>
-            <HBox fx:id="hbTap" alignment="CENTER" prefHeight="632.0" prefWidth="1340.0">
+            <HBox fx:id="hbTap" alignment="CENTER" prefHeight="632.0" prefWidth="1024.0">
                <children>
                   <ImageView fitHeight="430.0" fitWidth="554.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -347,7 +357,7 @@
             </HBox>
          </children>
       </Pane>
-      <VBox fx:id="vbDetails" alignment="TOP_CENTER" prefHeight="720.0" prefWidth="1344.0" spacing="50.0" visible="false">
+      <VBox fx:id="vbDetails" alignment="TOP_CENTER" prefHeight="720.0" prefWidth="1024.0" spacing="50.0" visible="false">
          <children>
             <HBox alignment="CENTER">
                <children>
@@ -358,17 +368,17 @@
                   </ImageView>
                   <Label fx:id="lPrev" layoutX="48.0" onMouseClicked="#handlePrevClicked" prefHeight="48.0" prefWidth="300.0" text="PREV" textFill="WHITE">
                      <font>
-                        <Font name="Governor" size="40.0" />
+                        <Font name="Governor" size="26.0" />
                      </font>
                   </Label>
                   <Label fx:id="lDestination" alignment="CENTER" layoutX="114.0" prefHeight="47.0" prefWidth="575.0" text="DESTINATION" textAlignment="CENTER" textFill="WHITE">
                      <font>
-                        <Font name="Governor" size="53.0" />
+                        <Font name="Governor" size="43.0" />
                      </font>
                   </Label>
                   <Label fx:id="lNext" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="455.0" onMouseClicked="#handleNextClicked" prefWidth="300.0" text="NEXT" textAlignment="RIGHT" textFill="WHITE">
                      <font>
-                        <Font name="Governor" size="40.0" />
+                        <Font name="Governor" size="26.0" />
                      </font>
                   </Label>
                   <ImageView fx:id="ivNext" fitHeight="49.0" fitWidth="48.0" layoutX="569.0" onMouseClicked="#handleNextClicked" pickOnBounds="true" preserveRatio="true" rotate="90.0">
@@ -380,29 +390,29 @@
             </HBox>
             <HBox>
                <children>
-                  <VBox prefHeight="559.0" prefWidth="853.0">
+                  <VBox prefHeight="559.0" prefWidth="1000.0">
                      <children>
                         <TableView fx:id="tvBusDetails" prefHeight="892.0" prefWidth="798.0">
                           <columns>
                             <TableColumn fx:id="tcBusCompany" prefWidth="136.0" style="-fx-alignment: CENTER" text="Bus Company" />
                             <TableColumn fx:id="tcBusType" minWidth="0.0" prefWidth="103.0" style="-fx-alignment: CENTER;" text="Bus Type" />
-                              <TableColumn fx:id="tccLocation" minWidth="0.0" prefWidth="142.0" text="Location">
+                              <TableColumn fx:id="tccLocation" minWidth="0.0" prefWidth="190.0" text="Location">
                                  <columns>
-                                    <TableColumn fx:id="tcWingArea" prefWidth="75.0" style="-fx-alignment: CENTER;" text="Wing Area" />
-                                    <TableColumn fx:id="tcBayNumber" prefWidth="75.0" style="-fx-alignment: CENTER;" text="Bay Number" />
+                                    <TableColumn fx:id="tcWingArea" prefWidth="95.0" style="-fx-alignment: CENTER;" text="Wing Area" />
+                                    <TableColumn fx:id="tcBayNumber" prefWidth="95.0" style="-fx-alignment: CENTER;" text="Bay Number" />
                                  </columns>
                               </TableColumn>
-                              <TableColumn fx:id="tcDestination" prefWidth="185.0" style="-fx-alignment: CENTER;" text="Destination" />
+                              <TableColumn fx:id="tcDestination" prefWidth="250.0" style="-fx-alignment: CENTER;" text="Destination" />
                               <TableColumn fx:id="tcFirstTrip" prefWidth="63.0" style="-fx-alignment: CENTER;" text="First Trip" />
                               <TableColumn fx:id="tcLastTrip" prefWidth="66.0" style="-fx-alignment: CENTER;" text="Last Trip" />
-                              <TableColumn fx:id="tcTime" prefWidth="56.0" style="-fx-alignment: CENTER;" text="Arrived?" />
-                              <TableColumn fx:id="tcMaxFare" prefWidth="45.0" style="-fx-alignment: CENTER;" text="Max. &#10;Fare" />
+                              <TableColumn fx:id="tcTime" prefWidth="100.0" style="-fx-alignment: CENTER;" text="Arrived?" />
+                              <TableColumn fx:id="tcMaxFare" prefWidth="70.0" style="-fx-alignment: CENTER;" text="Max. Fare" />
                           </columns>
                            <VBox.margin>
                               <Insets />
                            </VBox.margin>
                         </TableView>
-                        <HBox alignment="BOTTOM_LEFT" prefHeight="545.0" prefWidth="1250.0" spacing="100.0">
+                        <HBox alignment="BOTTOM_LEFT" prefHeight="600.0" prefWidth="1024.0" spacing="100.0">
                            <children>
                               <VBox alignment="BOTTOM_LEFT">
                                  <children>
@@ -486,6 +496,11 @@
                                     </Label>
                                  </children>
                               </VBox>
+                              <ImageView fx:id="ivTerminalPath" fitHeight="250.0" fitWidth="300.0" layoutX="2.0" layoutY="310.0" pickOnBounds="true">
+                                 <image>
+                                    <Image url="@res/TerminalMap/GIF/RW-1.gif" />
+                                 </image>
+                              </ImageView>
                            </children>
                            <VBox.margin>
                               <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
@@ -493,15 +508,6 @@
                         </HBox>
                      </children>
                   </VBox>
-                  <Pane prefHeight="335.0" prefWidth="558.0">
-                     <children>
-                        <ImageView fx:id="ivTerminalPath" fitHeight="360.0" fitWidth="494.0" layoutX="2.0" layoutY="68.0" pickOnBounds="true">
-                           <image>
-                              <Image url="@res/TerminalMap/GIF/RW-1.gif" />
-                           </image>
-                        </ImageView>
-                     </children>
-                  </Pane>
                </children>
             </HBox>
          </children>

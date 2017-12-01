@@ -11,11 +11,11 @@
 
 <VBox alignment="CENTER" prefHeight="401.0" prefWidth="690.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Management_Controller">
    <children>
-      <VBox fx:id="vbMainPane" alignment="CENTER" minHeight="0.0" minWidth="0.0" prefHeight="0.0" prefWidth="640.0" spacing="25.0" visible="false">
+      <VBox fx:id="vbMainPane" alignment="CENTER" minHeight="0.0" minWidth="0.0" prefHeight="0.0" prefWidth="640.0" spacing="25.0">
          <children>
             <HBox alignment="CENTER" spacing="75.0">
                <children>
-                  <ImageView fx:id="ivAddBus" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#handleAddBusClicked" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="ivAddBus" fitHeight="150.0" fitWidth="142.0" onMouseClicked="#handleAddBusClicked" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@res/add_bus.png" />
                      </image>
@@ -25,24 +25,50 @@
                         <Image url="@res/edit_bus.png" />
                      </image>
                   </ImageView>
+                  <ImageView fx:id="ivArrivals" fitHeight="154.0" fitWidth="121.0" onMouseClicked="#handleArrivalsClicked" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@res/arrivals.png" />
+                     </image>
+                  </ImageView>
                </children>
             </HBox>
             <HBox alignment="CENTER" spacing="75.0">
                <children>
-                  <ImageView fitHeight="150.0" fitWidth="200.0" onMouseClicked="#handleEditFaresClicked" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="153.0" fitWidth="118.0" onMouseClicked="#handleEditFaresClicked" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@res/edit_fares.png" />
-                     </image></ImageView>
-                  <ImageView fitHeight="150.0" fitWidth="200.0" onMouseClicked="#handleDeleteBusClicked" pickOnBounds="true" preserveRatio="true">
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="ivEditAnnouncements" fitHeight="146.0" fitWidth="132.0" onMouseClicked="#handleAnnouncementsClicked" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@res/delete_bus.png" />
-                     </image></ImageView>
+                        <Image url="@res/edit_announcement.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="ivEditFAQs" fitHeight="150.0" fitWidth="121.0" onMouseClicked="#handleEditFAQClicked" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@res/edit_faqs.png" />
+                     </image>
+                  </ImageView>
                </children>
             </HBox>
          </children>
       </VBox>
-      <VBox fx:id="vbEditBuses" alignment="CENTER" minHeight="0.0" minWidth="0.0" prefHeight="0.0" spacing="25.0">
+      <VBox fx:id="vbEditBuses" alignment="CENTER" minHeight="0.0" minWidth="0.0" prefHeight="0.0" spacing="10.0" visible="false">
          <children>
+            <HBox alignment="CENTER_LEFT">
+               <children>
+                  <ImageView fx:id="ivHeader" fitHeight="97.0" fitWidth="62.0" onMouseClicked="#handleEditBusClicked" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@res/editBus.png" />
+                     </image>
+                  </ImageView>
+                  <Label fx:id="lHeader" text="Edit Bus Information" textFill="#243772">
+                     <font>
+                        <Font name="Governor" size="43.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
             <HBox fx:id="hbEditBus" alignment="CENTER" prefHeight="25.0" prefWidth="631.0" spacing="25.0">
                <children>
                   <ComboBox fx:id="cbBus" prefHeight="25.0" prefWidth="148.0" promptText="Bus Company" />
@@ -51,10 +77,10 @@
                   <Button fx:id="btnSearch" defaultButton="true" disable="true" mnemonicParsing="false" onMouseClicked="#handleEditClicked" prefHeight="25.0" prefWidth="88.0" text="Look-Up" />
                </children>
                <VBox.margin>
-                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                  <Insets bottom="100.0" left="20.0" right="20.0" top="20.0" />
                </VBox.margin>
             </HBox>
-            <HBox fx:id="hbDetail" alignment="CENTER" spacing="15.0">
+            <HBox fx:id="hbDetail" alignment="CENTER" minHeight="0.0" spacing="15.0" visible="false">
                <children>
                   <HBox spacing="15.0">
                      <children>
@@ -69,11 +95,11 @@
                         </VBox>
                         <VBox fx:id="vbDetail1_2" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
                            <children>
-                              <TextField fx:id="tfCompany" editable="false" />
-                              <ComboBox fx:id="cbTypeFin" prefWidth="150.0" />
-                              <ComboBox fx:id="cbDestinationFin" prefWidth="150.0" />
-                              <ComboBox fx:id="cbWingArea" prefWidth="150.0" />
-                              <ComboBox fx:id="cbBayNumber" prefWidth="150.0" />
+                              <TextField fx:id="tfCompany" editable="false" promptText="Bus Company" />
+                              <ComboBox fx:id="cbTypeFin" prefWidth="150.0" promptText="Bus Type" />
+                              <ComboBox fx:id="cbDestinationFin" prefWidth="150.0" promptText="Destination" />
+                              <ComboBox fx:id="cbWingArea" prefWidth="150.0" promptText="Wing Area" />
+                              <ComboBox fx:id="cbBayNumber" prefWidth="150.0" promptText="Bay Number" />
                            </children>
                         </VBox>
                      </children>
@@ -91,21 +117,140 @@
                         </VBox>
                         <VBox fx:id="vbDetail2_2" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
                            <children>
-                              <TextField fx:id="tfFirstDep" />
-                              <TextField fx:id="tfLastDep" />
-                              <TextField fx:id="tfTrips" />
-                              <TextField fx:id="tfBuses" />
-                              <TextField fx:id="tfFare" />
+                              <TextField fx:id="tfFirstDep" promptText="Time of First Departure" />
+                              <TextField fx:id="tfLastDep" promptText="Time of Last Departure" />
+                              <TextField fx:id="tfTrips" promptText="Number of Tri[s" />
+                              <TextField fx:id="tfBuses" promptText="Number of Buses" />
+                              <TextField fx:id="tfFare" promptText="Fare in Pesos" />
                            </children>
                         </VBox>
                      </children>
                   </HBox>
                </children>
             </HBox>
-            <HBox alignment="CENTER" spacing="50.0">
+            <VBox fx:id="vbArrival" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
                <children>
-                  <Button fx:id="btnSave" mnemonicParsing="false" onMouseClicked="#handleSaveClicked" prefHeight="25.0" prefWidth="126.0" text="Save" />
-                  <Button fx:id="btnBack" mnemonicParsing="false" onMouseClicked="#handleBackClicked" prefHeight="25.0" prefWidth="126.0" text="Back to Main" />
+                  <HBox alignment="CENTER" spacing="35.0">
+                     <children>
+                        <Label text="Wing Area" />
+                        <ComboBox fx:id="cbWingArea1" prefWidth="150.0" promptText="Wing Area" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" spacing="25.0">
+                     <children>
+                        <Label text="Bay Number" />
+                        <ComboBox fx:id="cbBayNumber1" prefWidth="150.0" promptText="Bay Number" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" spacing="48.0">
+                     <children>
+                        <Label text="Arrived?" />
+                        <ComboBox fx:id="cbArrived" prefWidth="150.0" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox alignment="CENTER">
+               <children>
+                  <Label fx:id="lErrorMessage" />
+                  <HBox alignment="CENTER" spacing="50.0">
+                     <children>
+                        <Button fx:id="btnSave" defaultButton="true" disable="true" mnemonicParsing="false" onMouseClicked="#handleSaveClicked" prefHeight="25.0" prefWidth="126.0" text="Save" />
+                        <Button fx:id="btnDelete" disable="true" mnemonicParsing="false" onMouseClicked="#handleDeleteClicked" prefHeight="25.0" prefWidth="126.0" style="-fx-background-color: RED;" text="Delete" textFill="WHITE" />
+                        <Button fx:id="btnBack" cancelButton="true" mnemonicParsing="false" onMouseClicked="#handleBackClicked" prefHeight="25.0" prefWidth="126.0" text="Back to Main" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+      <VBox fx:id="vbFares" alignment="CENTER" minHeight="0.0" minWidth="0.0" prefHeight="0.0" prefWidth="640.0" spacing="25.0" visible="false">
+         <children>
+            <HBox alignment="CENTER_LEFT">
+               <children>
+                  <ImageView fitHeight="97.0" fitWidth="62.0" onMouseClicked="#handleEditBusClicked" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@res/editFare.png" />
+                     </image>
+                  </ImageView>
+                  <Label text="Edit Fare" textFill="#243772">
+                     <font>
+                        <Font name="Governor" size="43.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" spacing="20.0">
+               <children>
+                  <Label text="Municipality" />
+                  <ComboBox fx:id="cbMunicipalities" prefWidth="150.0" promptText="Choose town..." />
+               </children>
+            </HBox>
+            <HBox fx:id="hbFareOrd" alignment="CENTER" disable="true" spacing="75.0">
+               <children>
+                  <Label text="Fare for Ordinary Buses" />
+                  <TextField fx:id="tfFareOrdinary" />
+               </children>
+            </HBox>
+            <HBox fx:id="hbFareAir" alignment="CENTER" disable="true" spacing="75.0">
+               <children>
+                  <Label text="Fare for Air-con Buses" />
+                  <TextField fx:id="tfFareAircon" />
+               </children>
+            </HBox>
+            <Label fx:id="lErrorMessage2" />
+            <HBox alignment="CENTER" spacing="75.0">
+               <children>
+                  <Button fx:id="btnSaveFare" defaultButton="true" mnemonicParsing="false" onMouseClicked="#handleSaveFareClicked" prefWidth="126.0" text="Save" />
+                  <Button fx:id="btnCancelFare" cancelButton="true" mnemonicParsing="false" onMouseClicked="#handleBackClicked" prefWidth="126.0" text="Cancel" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+      <VBox fx:id="vbAnnouncements" alignment="CENTER" minHeight="0.0" minWidth="0.0" prefHeight="0.0" prefWidth="640.0" spacing="15.0" visible="false">
+         <children>
+            <HBox alignment="CENTER_LEFT">
+               <children>
+                  <ImageView fx:id="ivAnnQue" fitHeight="97.0" fitWidth="62.0" onMouseClicked="#handleEditBusClicked" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@res/editAnnouncement.png" />
+                     </image>
+                  </ImageView>
+                  <Label fx:id="lAnnQue" text="Edit Announcements" textFill="#243772">
+                     <font>
+                        <Font name="Governor" size="43.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <TextField fx:id="tfQuestion" promptText="Add question">
+               <VBox.margin>
+                  <Insets left="80.0" right="80.0" />
+               </VBox.margin>
+            </TextField>
+            <HBox alignment="CENTER">
+               <children>
+                  <ImageView fx:id="ivAnnLeft" fitHeight="61.0" fitWidth="70.0" onMouseClicked="#handleLeftBtnAnnClicked" pickOnBounds="true" preserveRatio="true" rotate="-90.0">
+                     <image>
+                        <Image url="@res/arrow_vert.png" />
+                     </image>
+                  </ImageView>
+                  <Region prefHeight="200.0" prefWidth="200.0" />
+                  <TextArea fx:id="taAnnouncement" minHeight="200.0" prefHeight="200.0" prefWidth="658.0" promptText="Add announcement" />
+                  <Region prefHeight="200.0" prefWidth="200.0" />
+                  <ImageView fx:id="ivAnnRight" fitHeight="61.0" fitWidth="70.0" onMouseClicked="#handleRightBtnAnnClicked" pickOnBounds="true" preserveRatio="true" rotate="90.0">
+                     <image>
+                        <Image url="@res/arrow_vert.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </HBox>
+            <Label fx:id="lErrorMessage3" />
+            <HBox alignment="CENTER" prefHeight="26.0" prefWidth="640.0" spacing="25.0">
+               <children>
+                  <Button fx:id="btnAnnSave" defaultButton="true" mnemonicParsing="false" onMouseClicked="#handleSaveAnnClicked" prefWidth="126.0" text="Save" />
+                  <Button fx:id="btnAnnDelete" mnemonicParsing="false" onMouseClicked="#handleDeleteAnnClicked" prefWidth="126.0" style="-fx-background-color: RED;" text="Delete" textFill="WHITE" />
+                  <Button cancelButton="true" mnemonicParsing="false" onMouseClicked="#handleBackClicked" prefWidth="126.0" text="Back to Menu" />
                </children>
             </HBox>
          </children>
