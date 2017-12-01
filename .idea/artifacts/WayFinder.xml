@@ -1,5 +1,5 @@
 <component name="ArtifactManager">
-  <artifact type="javafx" name="WayFinder">
+  <artifact type="javafx" build-on-make="true" name="WayFinder">
     <output-path>$PROJECT_DIR$/out/artifacts/WayFinder</output-path>
     <properties id="javafx-properties">
       <options>
@@ -16,6 +16,78 @@
         <element id="module-output" name="WayFinder" />
       </element>
       <element id="library" level="project" name="com.google.firebase:firebase-admin:5.5.0" />
+      <element id="directory" name="src">
+        <element id="file-copy" path="$PROJECT_DIR$/src/Announcement.java" />
+        <element id="file-copy" path="$PROJECT_DIR$/src/bus.db" />
+        <element id="file-copy" path="$PROJECT_DIR$/src/Bus.java" />
+        <element id="file-copy" path="$PROJECT_DIR$/src/Company.java" />
+        <element id="file-copy" path="$PROJECT_DIR$/src/DatabaseHelper.java" />
+        <element id="file-copy" path="$PROJECT_DIR$/src/FAQ.java" />
+        <element id="file-copy" path="$PROJECT_DIR$/src/IdleMonitor.java" />
+        <element id="file-copy" path="$PROJECT_DIR$/src/Main.java" />
+        <element id="file-copy" path="$PROJECT_DIR$/src/Management.fxml" />
+        <element id="file-copy" path="$PROJECT_DIR$/src/Management_Controller.java" />
+        <element id="file-copy" path="$PROJECT_DIR$/src/Municipality.java" />
+        <element id="file-copy" path="$PROJECT_DIR$/src/WayFinder_Controller.java" />
+        <element id="file-copy" path="$PROJECT_DIR$/src/WayFinders (2).fxml" />
+        <element id="file-copy" path="$PROJECT_DIR$/src/wayfinders-d7e57-firebase-adminsdk-fsckn-5fdf91643f.json" />
+        <element id="file-copy" path="$PROJECT_DIR$/src/WayFinders.fxml" />
+        <element id="directory" name="res">
+          <element id="file-copy" path="$PROJECT_DIR$/src/res/Details_Background.png" />
+          <element id="file-copy" path="$PROJECT_DIR$/src/res/white.png" />
+          <element id="file-copy" path="$PROJECT_DIR$/src/res/edit_announcement.png" />
+          <element id="file-copy" path="$PROJECT_DIR$/src/res/TapToStart.gif" />
+          <element id="file-copy" path="$PROJECT_DIR$/src/res/editAnnouncement.png" />
+          <element id="file-copy" path="$PROJECT_DIR$/src/res/arrow_vert.png" />
+          <element id="file-copy" path="$PROJECT_DIR$/src/res/help.png" />
+          <element id="file-copy" path="$PROJECT_DIR$/src/res/delete_bus.png" />
+          <element id="file-copy" path="$PROJECT_DIR$/src/res/addBus.png" />
+          <element id="file-copy" path="$PROJECT_DIR$/src/res/Details_Background.gif" />
+          <element id="file-copy" path="$PROJECT_DIR$/src/res/edit_bus.png" />
+          <element id="file-copy" path="$PROJECT_DIR$/src/res/edit_faqs.png" />
+          <element id="file-copy" path="$PROJECT_DIR$/src/res/add_bus.png" />
+          <element id="file-copy" path="$PROJECT_DIR$/src/res/MenuBackground.png" />
+          <element id="file-copy" path="$PROJECT_DIR$/src/res/arrivals.png" />
+          <element id="file-copy" path="$PROJECT_DIR$/src/res/editFAQs.png" />
+          <element id="file-copy" path="$PROJECT_DIR$/src/res/Background.png" />
+          <element id="file-copy" path="$PROJECT_DIR$/src/res/back_button.png" />
+          <element id="file-copy" path="$PROJECT_DIR$/src/res/editFare.png" />
+          <element id="file-copy" path="$PROJECT_DIR$/src/res/editBus.png" />
+          <element id="file-copy" path="$PROJECT_DIR$/src/res/arrivals2.png" />
+          <element id="file-copy" path="$PROJECT_DIR$/src/res/edit_fares.png" />
+          <element id="directory" name="Cebu_Muns">
+            <element id="file-copy" path="$PROJECT_DIR$/src/res/CebuMuns/Alcantara.png" />
+            <element id="file-copy" path="$PROJECT_DIR$/src/res/CebuMuns/Alcoy.png" />
+            <element id="file-copy" path="$PROJECT_DIR$/src/res/CebuMuns/Alegria.png" />
+            <element id="file-copy" path="$PROJECT_DIR$/src/res/CebuMuns/Aloguinsan.png" />
+            <element id="file-copy" path="$PROJECT_DIR$/src/res/CebuMuns/Argao.png" />
+            <element id="file-copy" path="$PROJECT_DIR$/src/res/CebuMuns/Asturias.png" />
+            <element id="file-copy" path="$PROJECT_DIR$/src/res/CebuMuns/Bacolod.png" />
+            <element id="file-copy" path="$PROJECT_DIR$/src/res/CebuMuns/Badian.png" />
+            <element id="file-copy" path="$PROJECT_DIR$/src/res/CebuMuns/Balamban.png" />
+            <element id="file-copy" path="$PROJECT_DIR$/src/res/CebuMuns/Barili.png" />
+            <element id="file-copy" path="$PROJECT_DIR$/src/res/CebuMuns/Boljoon.png" />
+            <element id="file-copy" path="$PROJECT_DIR$/src/res/CebuMuns/Carcar-City.png" />
+            <element id="file-copy" path="$PROJECT_DIR$/src/res/CebuMuns/Dalaguete.png" />
+            <element id="file-copy" path="$PROJECT_DIR$/src/res/CebuMuns/Dumaguete.png" />
+            <element id="file-copy" path="$PROJECT_DIR$/src/res/CebuMuns/Dumanjug.png" />
+            <element id="file-copy" path="$PROJECT_DIR$/src/res/CebuMuns/Ginatilan.png" />
+            <element id="file-copy" path="$PROJECT_DIR$/src/res/CebuMuns/Malabuyoc.png" />
+            <element id="file-copy" path="$PROJECT_DIR$/src/res/CebuMuns/Moalboal.png" />
+            <element id="file-copy" path="$PROJECT_DIR$/src/res/CebuMuns/Oslob.png" />
+            <element id="file-copy" path="$PROJECT_DIR$/src/res/CebuMuns/Pinamungahan.png" />
+            <element id="file-copy" path="$PROJECT_DIR$/src/res/CebuMuns/Ronda.png" />
+            <element id="file-copy" path="$PROJECT_DIR$/src/res/CebuMuns/Samboan.png" />
+            <element id="file-copy" path="$PROJECT_DIR$/src/res/CebuMuns/Santander.png" />
+            <element id="file-copy" path="$PROJECT_DIR$/src/res/CebuMuns/Sibonga.png" />
+            <element id="file-copy" path="$PROJECT_DIR$/src/res/CebuMuns/Toledo-City.png" />
+            <element id="file-copy" path="$PROJECT_DIR$/src/res/CebuMuns/Tuburan.png" />
+            <element id="file-copy" path="$PROJECT_DIR$/src/res/CebuMuns/Unimportant.png" />
+            <element id="file-copy" path="$PROJECT_DIR$/src/res/CebuMuns/Zamboanga.png" />
+          </element>
+          <element id="dir-copy" path="$PROJECT_DIR$/src/res/TerminalMap" />
+        </element>
+      </element>
     </root>
   </artifact>
 </component>
